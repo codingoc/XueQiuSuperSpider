@@ -1,23 +1,21 @@
 package org.decaywood;
 
-import org.decaywood.entity.Entry;
-import org.decaywood.utils.FileLoader;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.decaywood.entity.Entry;
+
 /**
  * @author: decaywood
  * @date: 2015/12/11 10:17
  */
-
 
 public abstract class GlobalSystemConfigLoader {
 
@@ -40,7 +38,8 @@ public abstract class GlobalSystemConfigLoader {
                 Integer port = Integer.parseInt(kv[1].trim());
                 addresses.add(new Entry<>(address, port));
                 return true;
-            } else return false;
+            } else
+                return false;
         });
     }
 
@@ -51,7 +50,8 @@ public abstract class GlobalSystemConfigLoader {
 
     public static void loadConfig() {
 
-        if(loaded) return;
+        if (loaded)
+            return;
 
         loaded = true;
 
@@ -61,23 +61,23 @@ public abstract class GlobalSystemConfigLoader {
     }
 
     public static Entry<String, Integer> getAddress(int index) {
-        if(index < 0 || index >= addresses.size()) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= addresses.size())
+            throw new ArrayIndexOutOfBoundsException();
         return addresses.get(index);
     }
-
 
     public static int getAddressSize() {
         return addresses.size();
     }
 
-
     /**
      * 加载系统配置
      */
     private static void loadSystemConfig() {
+        InputStream is = GlobalSystemConfigLoader.class.getResourceAsStream("/config.sys");
 
-        File file = FileLoader.loadFile("config.sys");
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        // File file = FileLoader.loadFile("config.sys");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             final String[] text = new String[1];
             while ((text[0] = reader.readLine()) != null) {
                 if (filters.stream().noneMatch(x -> x.test(text[0]))) {
@@ -93,14 +93,13 @@ public abstract class GlobalSystemConfigLoader {
 
     }
 
-
     /**
      * 加载RMI配置
      */
     private static void loadRMIConfig() {
-
-        File file = FileLoader.loadFile("config.rmi");
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        InputStream is = GlobalSystemConfigLoader.class.getResourceAsStream("/config.rmi");
+        //        File file = FileLoader.loadFile("config.rmi");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             final String[] text = new String[1];
             while ((text[0] = reader.readLine()) != null) {
                 if (filters.stream().noneMatch(x -> x.test(text[0]))) {

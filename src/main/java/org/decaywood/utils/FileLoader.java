@@ -1,6 +1,11 @@
 package org.decaywood.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,19 +20,16 @@ public abstract class FileLoader {
 
     private static final Map<String, String> cookie = new ConcurrentHashMap<>();//多线程写状态，存在并发
 
-
-
     /**
      * 加载最新cookie
      * @param key 关键字
      * @return cookie
      */
     public static String loadCookie(String key) {
-        if(cookie.containsKey(key)) return cookie.get(key);
+        if (cookie.containsKey(key))
+            return cookie.get(key);
         return EmptyObject.emptyString;
     }
-
-
 
     /**
      * 更新cookie
@@ -40,11 +42,9 @@ public abstract class FileLoader {
         updateCookie(COOKIE_FLUSH_PATH, cookie, replacedKey);
     }
 
-
     public static void updateCookie(String rawPath, String text, String key) {
         updateCookie(rawPath, text, key, new StringBuilder(), true);
     }
-
 
     /**
      * 若文件不存在则创建文件
@@ -52,30 +52,46 @@ public abstract class FileLoader {
      * @param text 更新内容
      * @param key 文件名字
      * @param  append 是否追加
+     * @throws IOException 
      */
     public static void updateCookie(String rawPath, String text, String key, StringBuilder builder, boolean append) {
+        /**
         String path = ROOT_PATH + rawPath;
         File cookie = new File(path);
         String p;
-        if(!cookie.exists()) updateCookie(builder.append("../").toString() + rawPath, text, key, builder, append);
+        if (!cookie.exists())
+            updateCookie(builder.append("../").toString() + rawPath, text, key, builder, append);
         else {
-
+        
             try {
                 p = path.replace("index", key);
-
+        
                 File file = new File(p);
                 boolean success = true;
-                if(!file.exists()) success = file.createNewFile();
-                if(!success) throw new Exception();
-
+                if (!file.exists())
+                    success = file.createNewFile();
+                if (!success)
+                    throw new Exception();
+        
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(p, append))) {
                     writer.write(text);
                 }
-
+        
             } catch (Exception e) {
                 System.out.println("FileLoader -> 写入失败!");
             }
+        }*/
+        try {
+            File file = File.createTempFile(key, ".txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
+                writer.write(text);
+            } catch (Exception e) {
+                throw e;
+            }
+        } catch (Exception e) {
+            System.out.println("FileLoader -> 写入失败!");
         }
+
     }
 
     /**
@@ -87,8 +103,10 @@ public abstract class FileLoader {
         String path = ROOT_PATH + rawPath;
         File file = new File(path);
 
-        if(!file.exists()) return loadFile(builder.append("../").toString() + rawPath, builder);
-        else return file;
+        if (!file.exists())
+            return loadFile(builder.append("../").toString() + rawPath, builder);
+        else
+            return file;
     }
 
     /**

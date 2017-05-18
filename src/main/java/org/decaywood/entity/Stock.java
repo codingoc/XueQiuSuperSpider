@@ -1,11 +1,11 @@
 package org.decaywood.entity;
 
+import java.util.Date;
+
 import org.decaywood.entity.trend.ShareHoldersTrend;
 import org.decaywood.entity.trend.StockTrend;
 import org.decaywood.utils.DateParser;
 import org.decaywood.utils.EmptyObject;
-
-import java.util.Date;
 
 /**
  * @author: decaywood
@@ -54,6 +54,11 @@ public class Stock implements DeepCopy<Stock> {
     private CompanyInfo companyInfo = EmptyObject.emptyCompanyInfo;//公司信息
     private Industry industry = EmptyObject.emptyIndustry;//所属行业
 
+    /** 描述信息 */
+    private String comment;
+
+    /** 来源 */
+    private String originURL;
 
     /**
      *
@@ -64,8 +69,6 @@ public class Stock implements DeepCopy<Stock> {
         this.stockName = stockName;
         this.stockNo = stockNo;
     }
-
-
 
     //股票名称
     public String getStockName() {
@@ -95,6 +98,7 @@ public class Stock implements DeepCopy<Stock> {
     public void setCurrent(String current) {
         this.current = current;
     }
+
     //成交量
     public String getVolume() {
         return volume;
@@ -295,6 +299,7 @@ public class Stock implements DeepCopy<Stock> {
         this.net_assets = net_assets;
 
     }
+
     //动态市盈率
     public String getPe_ttm() {
         return pe_ttm;
@@ -335,12 +340,10 @@ public class Stock implements DeepCopy<Stock> {
         this.psr = psr;
     }
 
-
     //雪球系统时间
     public void setTime(String time) {
         this.time = DateParser.parseToDate(time);
     }
-
 
     //雪球系统时间
     public void setTime(Date time) {
@@ -361,7 +364,6 @@ public class Stock implements DeepCopy<Stock> {
     public StockTrend getStockTrend() {
         return stockTrend;
     }
-
 
     public String getStockPageSite() {
         return Stock_Page_PreFix + stockNo;
@@ -456,5 +458,20 @@ public class Stock implements DeepCopy<Stock> {
         return stock;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getOriginURL() {
+        return originURL;
+    }
+
+    public void setOriginURL(String originURL) {
+        this.originURL = originURL;
+    }
 
 }
